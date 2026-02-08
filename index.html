@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Deploy your own Nostr CMS on Zeabur - a Nostr-native content management system." />
+    <meta name="keywords" content="Nostr, CMS, decentralized, content management, Zeabur, deploy" />
+    <meta name="author" content="bitkarrot" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Deploy Nostr CMS on Zeabur" />
+    <meta property="og:description" content="Deploy your own Nostr CMS - a Nostr-native content management system." />
+    <meta property="og:site_name" content="Nostr CMS Setup" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Deploy Nostr CMS on Zeabur" />
+    <meta name="twitter:description" content="Deploy your own Nostr CMS - a Nostr-native content management system." />
+
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#000000" />
+
+    <title>Deploy Nostr CMS on Zeabur</title>
+    <script src="https://unpkg.com/nostr-tools@2.10.4/lib/nostr.bundle.js"></script>
+    <script src="https://unpkg.com/nostr-login@latest/dist/unpkg.js" data-dark-mode="true" data-methods="extension,connect,readOnly" data-no-banner="true"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #e4e4e7;
+            background: linear-gradient(135deg, #431407 0%, #7c2d12 100%);
+            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode {
+            color: #333;
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #18181b;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transition: background 0.3s ease;
+        }
+
+        body.light-mode .container {
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        body.light-mode header {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            font-size: 1.3em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .content {
+            padding: 35px 40px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #fb923c;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #fb923c;
+            padding-bottom: 8px;
+        }
+
+        body.light-mode h2 {
+            color: #ea580c;
+            border-bottom: 2px solid #ea580c;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #c2410c;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        body.light-mode .step-number {
+            background: #ea580c;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .step-header h2 {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .input-group .hint {
+            font-size: 0.82em;
+            color: #a1a1aa;
+            margin-top: 4px;
+        }
+
+        body.light-mode .input-group .hint {
+            color: #6c757d;
+        }
+
+        .input-field {
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #3f3f46;
+            background: #27272a;
+            color: #e4e4e7;
+            font-size: 1em;
+            width: 100%;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #fb923c;
+        }
+
+        body.light-mode .input-field {
+            background: #f8f9fa;
+            color: #333;
+            border-color: #dee2e6;
+        }
+
+        body.light-mode .input-field:focus {
+            border-color: #ea580c;
+        }
+
+        .input-field::placeholder {
+            color: #71717a;
+        }
+
+        body.light-mode .input-field::placeholder {
+            color: #adb5bd;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .logged-in-info {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            padding: 12px 14px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88em;
+        }
+
+        .logout-link {
+            color: #94a3b8;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .logout-link:hover {
+            color: #e4e4e7;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .hex-hint {
+            font-size: 0.82em;
+            color: #94a3b8;
+            margin-top: 6px;
+            font-family: monospace;
+        }
+
+        .error-border {
+            border-color: #ef4444 !important;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #3f3f46;
+            margin: 30px 0;
+        }
+
+        body.light-mode .divider {
+            border-top-color: #dee2e6;
+        }
+
+        .code-block {
+            background: #09090b;
+            color: #e4e4e7;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.88em;
+            margin: 15px 0;
+            border: 1px solid #3f3f46;
+            line-height: 1.7;
+        }
+
+        body.light-mode .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            border: none;
+        }
+
+        .code-block code {
+            display: block;
+            white-space: pre;
+        }
+
+        .env-key {
+            color: #fdba74;
+        }
+
+        body.light-mode .env-key {
+            color: #fb923c;
+        }
+
+        .env-val {
+            color: #4ade80;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: opacity 0.2s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .copy-button:hover {
+            opacity: 0.9;
+            transform: scale(1.01);
+        }
+
+        body.light-mode .copy-button {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        }
+
+        .info {
+            background: #1e3a5f;
+            border-left: 4px solid #60a5fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #dbeafe;
+            font-size: 0.92em;
+        }
+
+        body.light-mode .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            color: #0c5460;
+        }
+
+        .warning {
+            background: #422006;
+            border-left: 4px solid #fbbf24;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #fef3c7;
+            font-size: 0.92em;
+        }
+
+        body.light-mode .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+
+        .success {
+            background: #14532d;
+            border-left: 4px solid #4ade80;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #dcfce7;
+            font-size: 0.92em;
+        }
+
+        body.light-mode .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+
+        a {
+            color: #fb923c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        body.light-mode a {
+            color: #ea580c;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #27272a;
+            padding: 20px;
+            text-align: center;
+            color: #a1a1aa;
+            font-size: 0.88em;
+        }
+
+        body.light-mode footer {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .zeabur-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #7c2d12;
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        body.light-mode .zeabur-badge {
+            background: #fff7ed;
+        }
+
+        .zeabur-badge span {
+            color: white;
+            font-weight: 600;
+        }
+
+        body.light-mode .zeabur-badge span {
+            color: #9a3412;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85em;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .status-ready {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+        }
+
+        .status-missing {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-ready .status-dot {
+            background: #4ade80;
+        }
+
+        .status-missing .status-dot {
+            background: #fbbf24;
+        }
+
+        .field-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 25px 20px;
+            }
+            header h1 {
+                font-size: 1.5em;
+            }
+            .code-block {
+                font-size: 0.8em;
+            }
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .theme-toggle { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <span class="theme-icon">☀️</span>
+            </button>
+            <h1>Deploy Nostr CMS on Zeabur</h1>
+            <p>Configure and deploy your Nostr-native content management system</p>
+        </header>
+
+        <div class="content">
+
+            <!-- Intro -->
+            <div class="section">
+                <h2>What is Nostr CMS?</h2>
+                <p style="margin-bottom: 15px;">
+                    <strong>Nostr CMS</strong> is a content management system built on the Nostr protocol.
+                    It lets you manage and publish content using Nostr events, with admin access controlled
+                    via your <code>nostr.json</code>. Supports scheduled posts, media uploads, and works
+                    with any Nostr relay.
+                </p>
+                <p>
+                    <a href="https://github.com/bitkarrot/nostr-cms" target="_blank">View on GitHub</a>
+                </p>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Zeabur signup -->
+            <div class="section">
+                <div class="zeabur-badge">
+                    <span>First, sign up for Zeabur:</span>
+                    <a href="https://zeabur.com/referral?referralCode=bitkarrot&utm_source=bitkarrot&utm_campaign=oss" target="_blank">
+                        <img src="https://zeabur.com/deployed-on-zeabur-dark.svg" width="140" alt="Deployed on Zeabur" style="display: block;" onerror="this.outerHTML='<strong style=&quot;color:#a78bfa&quot;>zeabur.com</strong>'"/>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Step 1: Nostr Login for VITE_MASTER_PUBKEY -->
+            <div class="section">
+                <div class="step-header">
+                    <span class="step-number">1</span>
+                    <h2>Set Master Public Key</h2>
+                </div>
+                <p style="margin-bottom: 12px;">Login with Nostr to automatically set your public key, or paste it manually.</p>
+
+                <div id="loginSection">
+                    <button type="button" id="nostrLoginBtn" class="login-btn">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                        Login with Nostr
+                    </button>
+                </div>
+
+                <div id="loggedInSection" class="hidden logged-in-info">
+                    <div>
+                        <span style="color: #4ade80;">&#10003;</span> Logged in as: <span id="loggedInNpub" style="font-family: monospace;"></span>
+                    </div>
+                    <span id="logoutBtn" class="logout-link">Logout</span>
+                </div>
+
+                <div class="input-group" style="margin-top: 12px;">
+                    <div class="field-status">
+                        <label for="masterPubkey">VITE_MASTER_PUBKEY</label>
+                        <span id="pubkeyStatus" class="status-indicator status-missing"><span class="status-dot"></span> Required</span>
+                    </div>
+                    <input type="text" id="masterPubkey" class="input-field" placeholder="npub1... or 64-character hex pubkey" oninput="onFieldChange()">
+                    <div id="hexHint" class="hex-hint hidden">HEX: <span id="hexValue" style="color: #4ade80;"></span></div>
+                    <div class="hint">The owner/admin pubkey for the CMS. Login with Nostr above to auto-fill.</div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Step 2: VITE_REMOTE_NOSTR_JSON_URL -->
+            <div class="section">
+                <div class="step-header">
+                    <span class="step-number">2</span>
+                    <h2>Set Nostr JSON URL</h2>
+                </div>
+
+                <div class="input-group">
+                    <div class="field-status">
+                        <label for="nostrJsonUrl">VITE_REMOTE_NOSTR_JSON_URL</label>
+                        <span id="jsonUrlStatus" class="status-indicator status-missing"><span class="status-dot"></span> Required</span>
+                    </div>
+                    <input type="text" id="nostrJsonUrl" class="input-field" placeholder="https://yourdomain.com/.well-known/nostr.json" oninput="onFieldChange()">
+                    <div class="hint">The URL to your remote <code>nostr.json</code> file used for admin authentication.</div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Step 3: VITE_DEFAULT_RELAY -->
+            <div class="section">
+                <div class="step-header">
+                    <span class="step-number">3</span>
+                    <h2>Set Default Relay</h2>
+                </div>
+
+                <div class="input-group">
+                    <div class="field-status">
+                        <label for="defaultRelay">VITE_DEFAULT_RELAY</label>
+                        <span id="relayStatus" class="status-indicator status-missing"><span class="status-dot"></span> Required</span>
+                    </div>
+                    <input type="text" id="defaultRelay" class="input-field" placeholder="wss://relay.example.com" oninput="onFieldChange()">
+                    <div class="hint">The default Nostr relay for reading and publishing content.</div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Generated Deploy Prompt -->
+            <div class="section">
+                <div class="step-header">
+                    <span class="step-number">4</span>
+                    <h2>Deploy to Zeabur</h2>
+                </div>
+                <p style="margin-bottom: 15px;">Copy the deployment prompt below and paste it into <a href="https://zeabur.com" target="_blank">Zeabur's AI assistant</a> to deploy.</p>
+
+                <div class="code-block" id="deployCodeBlock">
+                    <pre><code id="deployCode"></code></pre>
+                </div>
+
+                <button class="copy-button" id="copyBtn" onclick="copyDeployCode()">
+                    <span>&#128203;</span> <span id="copyBtnText">Copy Deployment Prompt</span>
+                </button>
+
+                <div class="info" style="margin-top: 20px;">
+                    <strong>After deploying:</strong>
+                    <ol style="margin-left: 18px; margin-top: 8px;">
+                        <li>Wait for the build to complete on Zeabur</li>
+                        <li>Zeabur will assign a domain automatically (e.g., <code>nostr-cms-xxx.zeabur.app</code>)</li>
+                        <li>Visit your deployed URL to verify the CMS is running</li>
+                    </ol>
+                </div>
+
+                <div class="warning" style="margin-top: 15px;">
+                    <strong>Optional:</strong> If you use a Swarm relay with an API, you can also set <code>VITE_SWARM_API_URL</code> in Zeabur's environment variables for scheduled posts support.
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p><a href="https://github.com/bitkarrot/nostr-cms" target="_blank">Nostr CMS</a> | <a href="https://zeabur.com" target="_blank">Zeabur</a></p>
+            <p style="margin-top: 5px; font-size: 0.85em;">For support, visit the GitHub repository</p>
+        </footer>
+    </div>
+
+    <script>
+        // Nostr helper functions
+        function isValidHex(str) {
+            return /^[0-9a-fA-F]{64}$/.test(str);
+        }
+
+        function convertToHex(input) {
+            input = input.trim();
+            if (!input) return '';
+
+            if (isValidHex(input)) {
+                return input.toLowerCase();
+            }
+
+            if (input.startsWith('npub1')) {
+                try {
+                    const decoded = NostrTools.nip19.decode(input);
+                    if (decoded.type !== 'npub') throw new Error('Not an npub');
+                    return decoded.data;
+                } catch (e) {
+                    throw new Error('Invalid npub format');
+                }
+            }
+            throw new Error('Invalid format');
+        }
+
+        function updateStatusIndicator(el, isReady) {
+            if (isReady) {
+                el.className = 'status-indicator status-ready';
+                el.innerHTML = '<span class="status-dot"></span> Ready';
+            } else {
+                el.className = 'status-indicator status-missing';
+                el.innerHTML = '<span class="status-dot"></span> Required';
+            }
+        }
+
+        function onFieldChange() {
+            const pubkeyInput = document.getElementById('masterPubkey');
+            const jsonUrlInput = document.getElementById('nostrJsonUrl');
+            const relayInput = document.getElementById('defaultRelay');
+            const hexHint = document.getElementById('hexHint');
+            const hexValue = document.getElementById('hexValue');
+
+            // Pubkey validation
+            const rawPubkey = pubkeyInput.value.trim();
+            let hexPubkey = '';
+            let pubkeyValid = false;
+
+            if (rawPubkey) {
+                try {
+                    hexPubkey = convertToHex(rawPubkey);
+                    pubkeyValid = true;
+                    hexValue.textContent = hexPubkey;
+                    hexHint.classList.remove('hidden');
+                    pubkeyInput.classList.remove('error-border');
+                } catch (e) {
+                    hexHint.classList.add('hidden');
+                    if (rawPubkey.length > 10) {
+                        pubkeyInput.classList.add('error-border');
+                    }
+                }
+            } else {
+                hexHint.classList.add('hidden');
+                pubkeyInput.classList.remove('error-border');
+            }
+
+            // URL validation
+            const jsonUrl = jsonUrlInput.value.trim();
+            const jsonUrlValid = jsonUrl.length > 0 && (jsonUrl.startsWith('http://') || jsonUrl.startsWith('https://'));
+
+            // Relay validation
+            const relay = relayInput.value.trim();
+            const relayValid = relay.length > 0 && (relay.startsWith('wss://') || relay.startsWith('ws://'));
+
+            // Update status indicators
+            updateStatusIndicator(document.getElementById('pubkeyStatus'), pubkeyValid);
+            updateStatusIndicator(document.getElementById('jsonUrlStatus'), jsonUrlValid);
+            updateStatusIndicator(document.getElementById('relayStatus'), relayValid);
+
+            // Update deploy code block
+            updateDeployCode(hexPubkey || rawPubkey, jsonUrl, relay);
+        }
+
+        function updateDeployCode(pubkey, jsonUrl, relay) {
+            const displayPubkey = pubkey || '<YOUR_HEX_PUBKEY>';
+            const displayJsonUrl = jsonUrl || '<YOUR_NOSTR_JSON_URL>';
+            const displayRelay = relay || '<YOUR_DEFAULT_RELAY>';
+
+            const code = `Deploy this repository https://github.com/bitkarrot/nostr-cms
+
+Automatically assign a zeabur domain to the service.
+
+Set the following environment variables:
+
+VITE_MASTER_PUBKEY="${displayPubkey}"
+VITE_REMOTE_NOSTR_JSON_URL="${displayJsonUrl}"
+VITE_DEFAULT_RELAY="${displayRelay}"`;
+
+            document.getElementById('deployCode').textContent = code;
+        }
+
+        // Nostr Login Integration
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginSection = document.getElementById('loginSection');
+            const loggedInSection = document.getElementById('loggedInSection');
+            const loggedInNpub = document.getElementById('loggedInNpub');
+            const nostrLoginBtn = document.getElementById('nostrLoginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const pubkeyInput = document.getElementById('masterPubkey');
+
+            // Initialize deploy code
+            onFieldChange();
+
+            nostrLoginBtn.addEventListener('click', () => {
+                document.dispatchEvent(new CustomEvent('nlLaunch', { detail: 'welcome' }));
+            });
+
+            logoutBtn.addEventListener('click', () => {
+                document.dispatchEvent(new CustomEvent('nlLogout'));
+            });
+
+            document.addEventListener('nlAuth', async (e) => {
+                if (e.detail.type === 'login' || e.detail.type === 'signup') {
+                    try {
+                        const hexPubkey = await window.nostr.getPublicKey();
+                        const npub = NostrTools.nip19.npubEncode(hexPubkey);
+
+                        loginSection.classList.add('hidden');
+                        loggedInSection.classList.remove('hidden');
+                        loggedInNpub.textContent = npub.slice(0, 12) + '...' + npub.slice(-8);
+
+                        pubkeyInput.value = npub;
+                        onFieldChange();
+                    } catch (err) {
+                        console.error('Failed to get pubkey:', err);
+                    }
+                } else if (e.detail.type === 'logout') {
+                    loginSection.classList.remove('hidden');
+                    loggedInSection.classList.add('hidden');
+                    loggedInNpub.textContent = '';
+                    pubkeyInput.value = '';
+                    onFieldChange();
+                }
+            });
+        });
+
+        function copyDeployCode() {
+            const code = document.getElementById('deployCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btnText = document.getElementById('copyBtnText');
+                btnText.textContent = 'Copied!';
+                setTimeout(() => {
+                    btnText.textContent = 'Copy Deployment Prompt';
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                const btnText = document.getElementById('copyBtnText');
+                btnText.textContent = 'Copied!';
+                setTimeout(() => {
+                    btnText.textContent = 'Copy Deployment Prompt';
+                }, 2000);
+            });
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+
+            body.classList.toggle('light-mode');
+
+            if (body.classList.contains('light-mode')) {
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('nostr-cms-theme', 'light');
+            } else {
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('nostr-cms-theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('nostr-cms-theme');
+            const themeIcon = document.querySelector('.theme-icon');
+
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                themeIcon.textContent = '🌙';
+            }
+        });
+    </script>
+</body>
+</html>
