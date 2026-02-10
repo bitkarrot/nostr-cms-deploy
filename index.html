@@ -966,13 +966,24 @@ VITE_DEFAULT_RELAY="<span class="env-val">your-relay-here</span>"</code></pre>
         }
 
         // Nostr JSON option selection
-        function selectPlatform(platform) {
-            const vercelCard = document.getElementById('vercelCard');
-            const zeaburCard = document.getElementById('zeaburCard');
-            const vercelSection = document.getElementById('vercelSection');
-            const zeaburSection = document.getElementById('zeaburSection');
+        function selectNostrJsonOption(option) {
+            const forkInfo = document.getElementById('nostrJsonForkInfo');
+            const swarmInfo = document.getElementById('nostrJsonSwarmInfo');
+            const options = document.querySelectorAll('.nostr-json-option');
 
-        // Nostr JSON option selection
+            options.forEach(opt => opt.classList.remove('selected'));
+
+            if (option === 'fork') {
+                options[0].classList.add('selected');
+                forkInfo.classList.remove('hidden');
+                swarmInfo.classList.add('hidden');
+            } else {
+                options[1].classList.add('selected');
+                forkInfo.classList.add('hidden');
+                swarmInfo.classList.remove('hidden');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const loginSection = document.getElementById('loginSection');
             const loggedInSection = document.getElementById('loggedInSection');
