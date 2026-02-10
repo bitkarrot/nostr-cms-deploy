@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Deploy your own Nostr CMS on Zeabur - a Nostr-native content management system." />
-    <meta name="keywords" content="Nostr, CMS, decentralized, content management, Zeabur, deploy" />
+    <meta name="description" content="Deploy your own Nostr CMS - a Nostr-native content management system." />
+    <meta name="keywords" content="Nostr, CMS, decentralized, content management, Vercel, Zeabur, deploy" />
     <meta name="author" content="bitkarrot" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Deploy Nostr CMS on Zeabur" />
+    <meta property="og:title" content="Deploy Nostr CMS" />
     <meta property="og:description" content="Deploy your own Nostr CMS - a Nostr-native content management system." />
     <meta property="og:site_name" content="Nostr CMS Setup" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Deploy Nostr CMS on Zeabur" />
+    <meta name="twitter:title" content="Deploy Nostr CMS" />
     <meta name="twitter:description" content="Deploy your own Nostr CMS - a Nostr-native content management system." />
 
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#181a24" />
 
-    <title>Deploy Nostr CMS on Zeabur</title>
+    <title>Deploy Nostr CMS</title>
     <script src="https://unpkg.com/nostr-tools@2.10.4/lib/nostr.bundle.js"></script>
     <script src="https://unpkg.com/nostr-login@latest/dist/unpkg.js" data-dark-mode="true" data-methods="extension,connect,readOnly" data-no-banner="true"></script>
     <style>
@@ -33,7 +33,7 @@
         }
 
         body {
-              font-family: 'Libre Baskerville', Georgia, serif;
+            font-family: 'Libre Baskerville', Georgia, serif;
             line-height: 1.6;
             color: #e6eaf3;
             background: #181a24;
@@ -48,7 +48,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: #23243a;
             border-radius: 16px;
@@ -424,32 +424,135 @@
             color: #3a5ba0;
         }
 
-        .zeabur-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: #1d1e2f;
-            padding: 14px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            border: 1px solid #2d2e3e;
+        /* Platform Cards */
+        .platform-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
         }
 
-        body.light-mode .zeabur-badge {
-            background: #fffbe6;
-            border-color: #b0b8c1;
+        .platform-card {
+            background: #2d2e3e;
+            border: 2px solid #3a5ba0;
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .zeabur-badge span {
-            color: #e6eaf3;
-            font-weight: 600;
+        .platform-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(58, 91, 160, 0.3);
         }
 
-        body.light-mode .zeabur-badge span {
+        .platform-card.selected {
+            border-color: #ffe066;
+            background: rgba(255, 224, 102, 0.1);
+        }
+
+        body.light-mode .platform-card {
+            background: #f5f7fa;
+            border-color: #6ea3c1;
+        }
+
+        body.light-mode .platform-card:hover {
+            box-shadow: 0 8px 25px rgba(58, 91, 160, 0.2);
+        }
+
+        body.light-mode .platform-card.selected {
+            border-color: #f7c873;
+            background: rgba(247, 200, 115, 0.15);
+        }
+
+        .platform-card h3 {
+            color: #ffe066;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+
+        body.light-mode .platform-card h3 {
+            color: #3a5ba0;
+        }
+
+        .platform-card p {
+            font-size: 0.9em;
+            color: #7a88a1;
+            margin-bottom: 12px;
+        }
+
+        body.light-mode .platform-card p {
+            color: #3a5ba0;
+        }
+
+        .platform-features {
+            list-style: none;
+            font-size: 0.85em;
+        }
+
+        .platform-features li {
+            padding: 4px 0;
+            color: #bccdf0;
+        }
+
+        body.light-mode .platform-features li {
             color: #1a2238;
         }
 
+        .platform-features li::before {
+            content: "✓ ";
+            color: #6ea3c1;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .deploy-button-container {
+            margin: 20px 0;
+        }
+
+        .deploy-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .deploy-button:hover {
+            transform: scale(1.02);
+            opacity: 0.95;
+        }
+
+        .deploy-button.vercel {
+            background: #fff;
+            color: #000;
+        }
+
+        .deploy-button.zeabur {
+            background: #3a5ba0;
+            color: #ffe066;
+        }
+
+        body.light-mode .deploy-button.zeabur {
+            background: #3a5ba0;
+            color: #fffbe6;
+        }
+
+        /* Platform sections */
+        .platform-section {
+            display: none;
+        }
+
+        .platform-section.active {
+            display: block;
+        }
+
+        /* Status indicator */
         .status-indicator {
             display: inline-flex;
             align-items: center;
@@ -492,7 +595,122 @@
             margin-bottom: 8px;
         }
 
-        @media (max-width: 600px) {
+        /* Nostr JSON Options */
+        .nostr-json-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .nostr-json-option {
+            background: #2d2e3e;
+            border: 2px solid #3a5ba0;
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nostr-json-option:hover {
+            border-color: #6ea3c1;
+        }
+
+        .nostr-json-option.selected {
+            border-color: #ffe066;
+            background: rgba(255, 224, 102, 0.1);
+        }
+
+        body.light-mode .nostr-json-option {
+            background: #f5f7fa;
+            border-color: #6ea3c1;
+        }
+
+        body.light-mode .nostr-json-option.selected {
+            border-color: #f7c873;
+            background: rgba(247, 200, 115, 0.15);
+        }
+
+        .nostr-json-option h4 {
+            color: #ffe066;
+            margin-bottom: 6px;
+        }
+
+        body.light-mode .nostr-json-option h4 {
+            color: #3a5ba0;
+        }
+
+        .nostr-json-option p {
+            font-size: 0.85em;
+            color: #7a88a1;
+        }
+
+        body.light-mode .nostr-json-option p {
+            color: #3a5ba0;
+        }
+
+        /* Experimental Section */
+        .experimental-section {
+            background: linear-gradient(135deg, rgba(255, 224, 102, 0.1) 0%, rgba(160, 74, 108, 0.1) 100%);
+            border: 2px dashed #ffe066;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 30px 0;
+        }
+
+        .experimental-badge {
+            display: inline-block;
+            background: #ffe066;
+            color: #1a2238;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .experimental-section h3 {
+            color: #ffe066;
+            margin-bottom: 10px;
+        }
+
+        body.light-mode .experimental-section {
+            background: linear-gradient(135deg, rgba(247, 200, 115, 0.2) 0%, rgba(160, 74, 108, 0.1) 100%);
+            border-color: #f7c873;
+        }
+
+        body.light-mode .experimental-section h3 {
+            color: #1a2238;
+        }
+
+        /* Relay Options */
+        .relay-info {
+            background: rgba(58, 91, 160, 0.1);
+            border: 1px solid rgba(58, 91, 160, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 15px 0;
+        }
+
+        .relay-info h4 {
+            color: #6ea3c1;
+            margin-bottom: 8px;
+        }
+
+        body.light-mode .relay-info {
+            background: rgba(110, 163, 193, 0.1);
+            border-color: rgba(110, 163, 193, 0.3);
+        }
+
+        body.light-mode .relay-info h4 {
+            color: #3a5ba0;
+        }
+
+        @media (max-width: 700px) {
+            .platform-cards,
+            .nostr-json-options {
+                grid-template-columns: 1fr;
+            }
             .content {
                 padding: 25px 20px;
             }
@@ -517,7 +735,7 @@
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <span class="theme-icon">☀️</span>
             </button>
-            <h1>Deploy Nostr CMS on Zeabur</h1>
+            <h1>Deploy Nostr CMS</h1>
             <p>Configure and deploy your Nostr-native content management system</p>
         </header>
 
@@ -532,6 +750,9 @@
                     via your <code>nostr.json</code>. Supports scheduled posts, media uploads, and works
                     with any Nostr relay.
                 </p>
+                <p style="margin-bottom: 15px;">
+                    Perfect for <a href="https://slides.hivetalk.org/purple" target="_blank" style="text-decoration: underline;">meetup groups</a> looking to publish events and content on Nostr.
+                </p>
                 <p>
                     <a href="https://github.com/bitkarrot/nostr-cms" target="_blank">View on GitHub</a>
                 </p>
@@ -539,20 +760,71 @@
 
             <hr class="divider">
 
-            <!-- Zeabur signup -->
-            <div class="section">
-                <div class="zeabur-badge">
-                    <span>First, sign up for Zeabur:</span>
-                    <a href="https://zeabur.com/referral?referralCode=bitkarrot&utm_source=bitkarrot&utm_campaign=oss" target="_blank">
-                        <img src="https://zeabur.com/deployed-on-zeabur-dark.svg" width="140" alt="Deployed on Zeabur" style="display: block;" onerror="this.outerHTML='<strong style=&quot;color:#3a5ba0&quot;>zeabur.com</strong>'"/>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Step 1: Nostr Login for VITE_MASTER_PUBKEY -->
+            <!-- Step 1: Choose nostr.json option -->
             <div class="section">
                 <div class="step-header">
                     <span class="step-number">1</span>
+                    <h2>Choose Your Nostr.json Setup</h2>
+                </div>
+                <p style="margin-bottom: 12px;">Nostr CMS requires a <code>nostr.json</code> file for authentication. Choose an option:</p>
+
+                <div class="nostr-json-options">
+                    <div class="nostr-json-option" onclick="selectNostrJsonOption('fork')">
+                        <h4>🍴 Fork nip05-service</h4>
+                        <p>Fork the <a href="https://github.com/bitkarrot/nip05-service" target="_blank">nip05-service</a> repo and manage your nostr.json on GitHub. Great for NIP-05 identities.</p>
+                    </div>
+                    <div class="nostr-json-option" onclick="selectNostrJsonOption('swarm')">
+                        <h4>🐝 Use Swarm Relay</h4>
+                        <p>Deploy a Swarm relay which includes a built-in nostr.json. Best for full-featured setups with scheduled posts.</p>
+                    </div>
+                </div>
+
+                <div id="nostrJsonForkInfo" class="info hidden">
+                    <strong>Fork Option:</strong> Fork <a href="https://github.com/bitkarrot/nip05-service" target="_blank">bitkarrot/nip05-service</a> on GitHub. Your nostr.json URL will be: <code>https://yourusername.github.io/nip05-service/.well-known/nostr.json</code>
+                </div>
+
+                <div id="nostrJsonSwarmInfo" class="info hidden">
+                    <strong>Swarm Relay Option:</strong> The Swarm relay includes a built-in nostr.json and supports scheduled notes.<br>
+                    <a href="https://oneshot.hivetalk.org" target="_blank" style="display: inline-block; margin-top: 10px; font-size: 1.2em; font-weight: 700; color: #ffe066; text-decoration: underline; text-underline-offset: 4px;">🚀 DEPLOY SWARM RELAY →</a>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Step 2: Choose Relay -->
+            <div class="section">
+                <div class="step-header">
+                    <span class="step-number">2</span>
+                    <h2>Choose Your Relay</h2>
+                </div>
+
+                <div class="relay-info">
+                    <h4>🌸 Blossom Relay (Recommended)</h4>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Nostr CMS is designed to work best with a Blossom relay for optimal media handling and content storage. Blossom is a Nostr protocol extension for file storage.</p>
+                </div>
+
+                <p style="margin-top: 12px; margin-bottom: 8px;">You can optionally use any other Nostr relay, but Blossom relays provide the best experience.</p>
+
+                <div class="warning">
+                    <strong>⚠️ Enter your relay URL in the text box below:</strong> Type or paste your relay websocket address (e.g., <code>wss://your-relay-url.com</code>).
+                </div>
+
+                <div class="input-group" style="margin-top: 15px;">
+                    <div class="field-status">
+                        <label for="defaultRelay">VITE_DEFAULT_RELAY</label>
+                        <span id="relayStatus" class="status-indicator status-missing"><span class="status-dot"></span> Required</span>
+                    </div>
+                    <input type="text" id="defaultRelay" class="input-field" placeholder="wss://relay.example.com" oninput="onFieldChange()">
+                    <div class="hint">The default Nostr relay for reading and publishing content.</div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Step 3: Nostr Login for VITE_MASTER_PUBKEY -->
+            <div class="section">
+                <div class="step-header">
+                    <span class="step-number">3</span>
                     <h2>Set Master Public Key</h2>
                 </div>
                 <p style="margin-bottom: 12px;">Login with Nostr to automatically set your public key, or paste it manually.</p>
@@ -566,7 +838,7 @@
 
                 <div id="loggedInSection" class="hidden logged-in-info">
                     <div>
-                        <span style="color: #6ea3c1;">&#10003;</span> Logged in as: <span id="loggedInNpub" style="font-family: monospace;"></span>
+                        <span style="color: #6ea3c1;">✓</span> Logged in as: <span id="loggedInNpub" style="font-family: monospace;"></span>
                     </div>
                     <span id="logoutBtn" class="logout-link">Logout</span>
                 </div>
@@ -584,10 +856,10 @@
 
             <hr class="divider">
 
-            <!-- Step 2: VITE_REMOTE_NOSTR_JSON_URL -->
+            <!-- Step 4: VITE_REMOTE_NOSTR_JSON_URL -->
             <div class="section">
                 <div class="step-header">
-                    <span class="step-number">2</span>
+                    <span class="step-number">4</span>
                     <h2>Set Nostr JSON URL</h2>
                 </div>
 
@@ -603,60 +875,138 @@
 
             <hr class="divider">
 
-            <!-- Step 3: VITE_DEFAULT_RELAY -->
+            <!-- Step 5: Choose Deployment Platform -->
             <div class="section">
                 <div class="step-header">
-                    <span class="step-number">3</span>
-                    <h2>Set Default Relay</h2>
+                    <span class="step-number">5</span>
+                    <h2>Choose Deployment Platform</h2>
+                </div>
+                <p style="margin-bottom: 15px;">Select where you'd like to deploy your Nostr CMS:</p>
+
+                <div class="platform-cards">
+                    <div class="platform-card" onclick="selectPlatform('vercel')" id="vercelCard">
+                        <h3>Vercel</h3>
+                        <p>Fast deployment with automatic previews</p>
+                        <ul class="platform-features">
+                            <li>One-click deploy</li>
+                            <li>Automatic HTTPS</li>
+                            <li>Global CDN</li>
+                            <li>Free tier available</li>
+                        </ul>
+                    </div>
+                    <div class="platform-card" onclick="selectPlatform('zeabur')" id="zeaburCard">
+                        <h3>Zeabur</h3>
+                        <p>Full-stack deployment with AI assistant</p>
+                        <ul class="platform-features">
+                            <li>AI-powered setup</li>
+                            <li>Built-in databases</li>
+                            <li>Auto-scaling</li>
+                            <li>Generous free tier</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <div class="field-status">
-                        <label for="defaultRelay">VITE_DEFAULT_RELAY</label>
-                        <span id="relayStatus" class="status-indicator status-missing"><span class="status-dot"></span> Required</span>
+                <!-- Vercel Section -->
+                <div id="vercelSection" class="platform-section">
+                    <div class="deploy-button-container" style="text-align: center;">
+                        <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbitkarrot%2Fnostr-cms&env=VITE_MASTER_PUBKEY&env=VITE_REMOTE_NOSTR_JSON_URL&env=VITE_DEFAULT_RELAY&envDescription=Copy%20the%20environment%20variables%20from%20above%20into%20the%20deployment%20form.%20Redeploy%20if%20you%20update%20them.&envLink=https%3A%2F%2Fgithub.com%2Fbitkarrot%2Fnostr-cms%23environment-variables&project-name=nostr-cms&repository-name=nostr-cms" target="_blank" class="deploy-button vercel">
+                            <svg width="20" height="20" viewBox="0 0 76 65" fill="currentColor"><path d="M37.5274 0L75.0548 65H0L37.5274 0ZM37.5274 12.5L10.5979 60H64.4569L37.5274 12.5Z"/></svg>
+                            Deploy to Vercel
+                        </a>
                     </div>
-                    <input type="text" id="defaultRelay" class="input-field" placeholder="wss://relay.example.com" oninput="onFieldChange()">
-                    <div class="hint">The default Nostr relay for reading and publishing content.</div>
+                    <div class="info" style="margin-top: 20px;">
+                        <strong>Vercel Instructions:</strong>
+                        <ol style="margin-left: 18px; margin-top: 8px;">
+                            <li>Click the Deploy button above</li>
+                            <li>Add the 3 environment variables from above:
+                                <ul style="margin-left: 18px; margin-top: 4px;">
+                                    <li><code>VITE_MASTER_PUBKEY</code></li>
+                                    <li><code>VITE_REMOTE_NOSTR_JSON_URL</code></li>
+                                    <li><code>VITE_DEFAULT_RELAY</code></li>
+                                </ul>
+                            </li>
+                            <li>Deploy! If you update variables, redeploy to apply changes.</li>
+                        </ol>
+                    </div>
+                    <div class="code-block">
+                        <strong>Environment Variables to Copy:</strong>
+                        <pre style="margin-top: 10px;"><code id="vercelEnvCode">VITE_MASTER_PUBKEY="<span class="env-val">your-pubkey-here</span>"
+VITE_REMOTE_NOSTR_JSON_URL="<span class="env-val">your-nostr-json-url-here</span>"
+VITE_DEFAULT_RELAY="<span class="env-val">your-relay-here</span>"</code></pre>
+                        <button class="copy-button" onclick="copyVercelEnv()" style="margin-top: 10px; padding: 8px 16px; font-size: 0.9em;">
+                            <span>📋</span> Copy Environment Variables
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Zeabur Section -->
+                <div id="zeaburSection" class="platform-section">
+                    <div class="deploy-button-container" style="text-align: center;">
+                        <a href="https://zeabur.com/referral?referralCode=bitkarrot&utm_source=bitkarrot&utm_campaign=oss" target="_blank" class="deploy-button zeabur">
+                            <span>🚀</span> Sign up for Zeabur
+                        </a>
+                    </div>
+                    <div class="code-block" style="margin-top: 20px;">
+                        <strong>Deployment Prompt for Zeabur AI:</strong>
+                        <pre style="margin-top: 10px;"><code id="zeaburDeployCode">Deploy this repository https://github.com/bitkarrot/nostr-cms
+
+Automatically assign a zeabur domain to the service.
+
+Set the following environment variables:
+
+VITE_MASTER_PUBKEY="<span class="env-val">your-pubkey-here</span>"
+VITE_REMOTE_NOSTR_JSON_URL="<span class="env-val">your-nostr-json-url-here</span>"
+VITE_DEFAULT_RELAY="<span class="env-val">your-relay-here</span>"</code></pre>
+                        <button class="copy-button" onclick="copyZeaburPrompt()" style="margin-top: 10px; padding: 8px 16px; font-size: 0.9em;">
+                            <span>📋</span> Copy Deployment Prompt
+                        </button>
+                    </div>
+                    <div class="info" style="margin-top: 15px;">
+                        <strong>Zeabur Instructions:</strong>
+                        <ol style="margin-left: 18px; margin-top: 8px;">
+                            <li>Sign up for Zeabur using the button above</li>
+                            <li>Copy the deployment prompt</li>
+                            <li>Paste it into Zeabur's AI assistant</li>
+                            <li>Alternatively, import the repository directly</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
 
             <hr class="divider">
 
-            <!-- Generated Deploy Prompt -->
-            <div class="section">
-                <div class="step-header">
-                    <span class="step-number">4</span>
-                    <h2>Deploy to Zeabur</h2>
-                </div>
-                <p style="margin-bottom: 15px;">Copy the deployment prompt below and paste it into <a href="https://zeabur.com" target="_blank">Zeabur's AI assistant</a> to deploy.</p>
-
-                <div class="code-block" id="deployCodeBlock">
-                    <pre><code id="deployCode"></code></pre>
+            <!-- Experimental All-in-One -->
+            <div class="experimental-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleExperimental()">
+                    <div>
+                    <span class="experimental-badge">⚠️ EXPERIMENTAL</span>
+                    <h3 style="display: inline; margin-left: 10px;">All-in-One: CMS + Swarm Relay</h3>
+                    </div>
+                    <span id="experimentalArrow" style="font-size: 1.5em; color: #ffe066;">▼</span>
                 </div>
 
-                <button class="copy-button" id="copyBtn" onclick="copyDeployCode()">
-                    <span>&#128203;</span> <span id="copyBtnText">Copy Deployment Prompt</span>
-                </button>
+                <div id="experimentalContent" style="display: none; margin-top: 15px;">
+                    <p style="margin-bottom: 12px;">Deploy CMS integrated with Swarm relay. Nostr.json managed via <code>/dashboard</code> after deployment.</p>
 
-                <div class="info" style="margin-top: 20px;">
-                    <strong>After deploying:</strong>
-                    <ol style="margin-left: 18px; margin-top: 8px;">
-                        <li>Wait for the build to complete on Zeabur</li>
-                        <li>Zeabur will assign a domain automatically (e.g., <code>nostr-cms-xxx.zeabur.app</code>)</li>
-                        <li>Visit your deployed URL to verify the CMS is running</li>
-                    </ol>
-                </div>
+                    <div class="code-block">
+                        <pre style="margin-top: 10px;"><code id="allInOneCode">Deploy https://github.com/HiveTalk/swarm/tree/cms-integration
 
-                <div class="warning" style="margin-top: 15px;">
-                    <strong>Optional:</strong> If you use a Swarm relay with an API, you can also set <code>VITE_SWARM_API_URL</code> in Zeabur's environment variables for scheduled posts support.
+Set: RELAY_PUBKEY="<span class="env-val">your-hex-pubkey-here</span>"
+VITE_MASTER_PUBKEY="<span class="env-val">your-hex-pubkey-here</span>"
+VITE_REMOTE_NOSTR_JSON_URL="<span class="env-val">your-nostr-json-url-here</span>"
+VITE_DEFAULT_RELAY="<span class="env-val">your-relay-here</span>"</code></pre>
+                        <button class="copy-button" onclick="copyAllInOnePrompt()" style="margin-top: 10px; padding: 8px 16px; font-size: 0.9em;">
+                            📋 Copy
+                        </button>
+                    </div>
                 </div>
             </div>
 
         </div>
 
         <footer>
-            <p><a href="https://github.com/bitkarrot/nostr-cms" target="_blank">Nostr CMS</a> | <a href="https://zeabur.com" target="_blank">Zeabur</a></p>
-            <p style="margin-top: 5px; font-size: 0.85em;">For support, visit the GitHub repository</p>
+            <p><a href="https://github.com/bitkarrot/nostr-cms" target="_blank">Nostr CMS</a> | <a href="https://github.com/HiveTalk/swarm" target="_blank">Swarm Relay</a></p>
+            <p style="margin-top: 5px; font-size: 0.85em;">For support, visit the GitHub repositories</p>
         </footer>
     </div>
 
@@ -739,26 +1089,79 @@
             updateStatusIndicator(document.getElementById('jsonUrlStatus'), jsonUrlValid);
             updateStatusIndicator(document.getElementById('relayStatus'), relayValid);
 
-            // Update deploy code block
-            updateDeployCode(hexPubkey || rawPubkey, jsonUrl, relay);
+            // Update deploy code blocks
+            updateEnvCodes(hexPubkey || rawPubkey, jsonUrl, relay);
         }
 
-        function updateDeployCode(pubkey, jsonUrl, relay) {
-            const displayPubkey = pubkey || '<YOUR_HEX_PUBKEY>';
-            const displayJsonUrl = jsonUrl || '<YOUR_NOSTR_JSON_URL>';
-            const displayRelay = relay || '<YOUR_DEFAULT_RELAY>';
+        function updateEnvCodes(pubkey, jsonUrl, relay) {
+            const displayPubkey = pubkey || 'your-pubkey-here';
+            const displayJsonUrl = jsonUrl || 'your-nostr-json-url-here';
+            const displayRelay = relay || 'your-relay-here';
 
-            const code = `Deploy this repository https://github.com/bitkarrot/nostr-cms
+            // Vercel env code
+            document.getElementById('vercelEnvCode').innerHTML =
+                `VITE_MASTER_PUBKEY="<span class="env-val">${displayPubkey}</span>"\n` +
+                `VITE_REMOTE_NOSTR_JSON_URL="<span class="env-val">${displayJsonUrl}</span>"\n` +
+                `VITE_DEFAULT_RELAY="<span class="env-val">${displayRelay}</span>"`;
 
-Automatically assign a zeabur domain to the service.
+            // Zeabur deploy code
+            document.getElementById('zeaburDeployCode').innerHTML =
+                `Deploy this repository https://github.com/bitkarrot/nostr-cms\n\n` +
+                `Automatically assign a zeabur domain to the service.\n\n` +
+                `Set the following environment variables:\n\n` +
+                `VITE_MASTER_PUBKEY="<span class="env-val">${displayPubkey}</span>"\n` +
+                `VITE_REMOTE_NOSTR_JSON_URL="<span class="env-val">${displayJsonUrl}</span>"\n` +
+                `VITE_DEFAULT_RELAY="<span class="env-val">${displayRelay}</span>"`;
 
-Set the following environment variables:
+            // All-in-One deploy code (relay + CMS variables)
+            document.getElementById('allInOneCode').innerHTML =
+                `Deploy this repository https://github.com/HiveTalk/swarm/tree/cms-integration\n\n` +
+                `Use the cms-integration branch. This is a Docker deployment.\n\n` +
+                `Set the following environment variables:\n\n` +
+                `RELAY_PUBKEY="<span class="env-val">${displayPubkey}</span>"\n` +
+                `VITE_MASTER_PUBKEY="<span class="env-val">${displayPubkey}</span>"\n` +
+                `VITE_REMOTE_NOSTR_JSON_URL="<span class="env-val">${displayJsonUrl}</span>"\n` +
+                `VITE_DEFAULT_RELAY="<span class="env-val">${displayRelay}</span>"`;
+        }
 
-VITE_MASTER_PUBKEY="${displayPubkey}"
-VITE_REMOTE_NOSTR_JSON_URL="${displayJsonUrl}"
-VITE_DEFAULT_RELAY="${displayRelay}"`;
+        // Platform selection
+        function selectPlatform(platform) {
+            const vercelCard = document.getElementById('vercelCard');
+            const zeaburCard = document.getElementById('zeaburCard');
+            const vercelSection = document.getElementById('vercelSection');
+            const zeaburSection = document.getElementById('zeaburSection');
 
-            document.getElementById('deployCode').textContent = code;
+            vercelCard.classList.remove('selected');
+            zeaburCard.classList.remove('selected');
+            vercelSection.classList.remove('active');
+            zeaburSection.classList.remove('active');
+
+            if (platform === 'vercel') {
+                vercelCard.classList.add('selected');
+                vercelSection.classList.add('active');
+            } else {
+                zeaburCard.classList.add('selected');
+                zeaburSection.classList.add('active');
+            }
+        }
+
+        // Nostr JSON option selection
+        function selectNostrJsonOption(option) {
+            const forkInfo = document.getElementById('nostrJsonForkInfo');
+            const swarmInfo = document.getElementById('nostrJsonSwarmInfo');
+            const options = document.querySelectorAll('.nostr-json-option');
+
+            options.forEach(opt => opt.classList.remove('selected'));
+
+            if (option === 'fork') {
+                options[0].classList.add('selected');
+                forkInfo.classList.remove('hidden');
+                swarmInfo.classList.add('hidden');
+            } else {
+                options[1].classList.add('selected');
+                forkInfo.classList.add('hidden');
+                swarmInfo.classList.remove('hidden');
+            }
         }
 
         // Nostr Login Integration
@@ -770,7 +1173,7 @@ VITE_DEFAULT_RELAY="${displayRelay}"`;
             const logoutBtn = document.getElementById('logoutBtn');
             const pubkeyInput = document.getElementById('masterPubkey');
 
-            // Initialize deploy code
+            // Initialize env codes
             onFieldChange();
 
             nostrLoginBtn.addEventListener('click', () => {
@@ -806,27 +1209,67 @@ VITE_DEFAULT_RELAY="${displayRelay}"`;
             });
         });
 
-        function copyDeployCode() {
-            const code = document.getElementById('deployCode').textContent;
+        // Copy functions
+        function copyVercelEnv() {
+            const pubkeyInput = document.getElementById('masterPubkey');
+            const jsonUrlInput = document.getElementById('nostrJsonUrl');
+            const relayInput = document.getElementById('defaultRelay');
+
+            let pubkey = pubkeyInput.value.trim();
+            // Convert npub to hex
+            if (pubkey.startsWith('npub1')) {
+                try {
+                    pubkey = convertToHex(pubkey);
+                } catch (e) {}
+            }
+
+            const code = `VITE_MASTER_PUBKEY="${pubkey || 'your-pubkey-here'}"
+VITE_REMOTE_NOSTR_JSON_URL="${jsonUrlInput.value.trim() || 'your-nostr-json-url-here'}"
+VITE_DEFAULT_RELAY="${relayInput.value.trim() || 'your-relay-here'}"`;
+
             navigator.clipboard.writeText(code).then(() => {
-                const btnText = document.getElementById('copyBtnText');
-                btnText.textContent = 'Copied!';
-                setTimeout(() => {
-                    btnText.textContent = 'Copy Deployment Prompt';
-                }, 2000);
+                alert('Environment variables copied!');
             }).catch(() => {
-                // Fallback for older browsers
+                // Fallback
                 const textarea = document.createElement('textarea');
                 textarea.value = code;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                const btnText = document.getElementById('copyBtnText');
-                btnText.textContent = 'Copied!';
-                setTimeout(() => {
-                    btnText.textContent = 'Copy Deployment Prompt';
-                }, 2000);
+                alert('Environment variables copied!');
+            });
+        }
+
+        function copyZeaburPrompt() {
+            const code = document.getElementById('zeaburDeployCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Deployment prompt copied!');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Deployment prompt copied!');
+            });
+        }
+
+        function copyAllInOnePrompt() {
+            const code = document.getElementById('allInOneCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Deployment prompt copied!');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Deployment prompt copied!');
             });
         }
 
@@ -855,6 +1298,18 @@ VITE_DEFAULT_RELAY="${displayRelay}"`;
                 themeIcon.textContent = '🌙';
             }
         });
+
+        function toggleExperimental() {
+            const content = document.getElementById('experimentalContent');
+            const arrow = document.getElementById('experimentalArrow');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                arrow.textContent = '▲';
+            } else {
+                content.style.display = 'none';
+                arrow.textContent = '▼';
+            }
+        }
     </script>
 </body>
 </html>
